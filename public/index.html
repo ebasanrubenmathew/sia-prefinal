@@ -6,7 +6,7 @@
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
       margin: 0;
@@ -19,79 +19,53 @@
       background: rgba(255,255,255,0.1);
       padding: 20px;
       border-radius: 12px;
-      backdrop-filter: blur(10px);
-    }
-
-    h1, h2 {
-      text-align: center;
     }
 
     button {
-      background: #00c9a7;
-      border: none;
-      padding: 10px 15px;
+      padding: 10px;
       margin: 5px;
+      border: none;
       border-radius: 6px;
       cursor: pointer;
+      background: #00c9a7;
       color: white;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background: #00a78e;
     }
 
     input {
       padding: 10px;
       margin: 5px;
-      border-radius: 6px;
-      border: none;
-      width: calc(100% - 22px);
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
+      width: 95%;
     }
 
     li {
       background: rgba(255,255,255,0.2);
       margin: 10px 0;
       padding: 10px;
-      border-radius: 6px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-    }
-
-    .actions button {
-      background: #ff6b6b;
-    }
-
-    .actions button:hover {
-      background: #e04848;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>📚 Student Records</h1>
+
+  <h1>Student Records</h1>
 
   <button onclick="loadStudents()">Load Students</button>
 
   <ul id="list"></ul>
 
-  <h2>Add Student</h2>
-  <input id="name" placeholder="Enter name">
-  <input id="year" type="number" placeholder="Enter year level">
-  <button onclick="addStudent()">Add Student</button>
+  <h3>Add Student</h3>
+  <input id="name" placeholder="Name">
+  <input id="year" type="number" placeholder="Year Level">
+  <button onclick="addStudent()">Add</button>
+
 </div>
 
 <script>
-  // ⚠️ CHANGE THIS AFTER DEPLOYMENT
-  const API = "http://localhost:3000/api/students";
-
+  // ✅ IMPORTANT FIX: NO localhost
+  const API = "/api/students";
 
   async function loadStudents() {
     const res = await fetch(API);
@@ -100,46 +74,31 @@
     const list = document.getElementById("list");
     list.innerHTML = "";
 
-    data.forEach(student => {
+    data.forEach(s => {
       const li = document.createElement("li");
 
       li.innerHTML = `
-        ${student.name} - Year ${student.yearLevel}
-        <div class="actions">
-          <button onclick="deleteStudent(${student.id})">Delete</button>
-        </div>
+        ${s.name} - Year ${s.yearLevel}
+        <button onclick="deleteStudent(${s.id})">Delete</button>
       `;
 
       list.appendChild(li);
     });
   }
 
-
   async function addStudent() {
     const name = document.getElementById("name").value;
     const yearLevel = document.getElementById("year").value;
 
-    if (!name || !yearLevel) {
-      alert("Please fill all fields");
-      return;
-    }
-
     await fetch(API, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, yearLevel })
     });
-
-    // clear input
-    document.getElementById("name").value = "";
-    document.getElementById("year").value = "";
 
     loadStudents();
   }
 
-  // DELETE STUDENT
   async function deleteStudent(id) {
     await fetch(`${API}/${id}`, {
       method: "DELETE"
