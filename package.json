@@ -1,7 +1,15 @@
 {
-  "name": "node-starter",
-  "private": true,
+  "name": "student-api",
+  "version": "1.0.0",
+  "description": "Student Records API",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.22.1",
+    "install": "^0.13.0",
+    "path": "^0.12.7"
   }
 }
